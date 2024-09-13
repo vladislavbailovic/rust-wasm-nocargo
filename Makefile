@@ -1,12 +1,23 @@
-serve: www/lib.wasm
-	python -m http.server -d www 6660
+SOURCE=src/lib.rs
+BUILDDIR=build
+WWWDIR=www
 
-www/lib.wasm: src/lib.rs Makefile
+serve: $(WWWDIR)/lib.wasm test
+	python -m http.server -d $(WWWDIR) 6660
+
+test: src/lib.rs
+	rustc --test $(SOURCE) -o $(BUILDDIR)/runall
+	./$(BUILDDIR)/runall
+	rm ./$(BUILDDIR)/runall
+
+www/lib.wasm: $(BUILDDIR)/lib.raw.wasm
+	wasm-opt -O3 $(BUILDDIR)/lib.raw.wasm -mvp -o $(WWWDIR)/lib.wasm
+	rm $(BUILDDIR)/lib.raw.wasm
+
+$(BUILDDIR)/lib.raw.wasm: src/lib.rs Makefile
 	# Thank you! https://surma.dev/things/rust-to-webassembly/
 	rustc --crate-type=cdylib \
 		--target=wasm32-unknown-unknown \
-		-C opt-level='z' \
+		-C opt-level=s \
 		-C lto=on \
-		src/lib.rs -o lib.raw.wasm
-	wasm-opt -O3 lib.raw.wasm -mvp -o www/lib.wasm
-	rm lib.raw.wasm
+		$(SOURCE) -o $(BUILDDIR)/lib.raw.wasm
