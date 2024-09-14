@@ -2,16 +2,24 @@ SOURCE=src/lib.rs
 BUILDDIR=build
 WWWDIR=www
 
-serve: $(WWWDIR)/lib.wasm test
+serve: build
 	python -m http.server -d $(WWWDIR) 6660
 
-test: src/lib.rs
+build: $(WWWDIR)/lib.wasm test
+	@echo "Built"
+
+fmt:
+	rustfmt src/*.rs
+
+test: src/lib.rs fmt
 	rustc --test $(SOURCE) -o $(BUILDDIR)/runall
 	./$(BUILDDIR)/runall
 	rm ./$(BUILDDIR)/runall
 
 www/lib.wasm: $(BUILDDIR)/lib.raw.wasm
-	wasm-opt -O3 $(BUILDDIR)/lib.raw.wasm -mvp -o $(WWWDIR)/lib.wasm
+	# Optimized version segfaults? wtf o.0
+	# wasm-opt -Os $(BUILDDIR)/lib.raw.wasm -mvp -o $(WWWDIR)/lib.wasm
+	wasm-opt $(BUILDDIR)/lib.raw.wasm -mvp -o $(WWWDIR)/lib.wasm
 	rm $(BUILDDIR)/lib.raw.wasm
 
 $(BUILDDIR)/lib.raw.wasm: src/lib.rs Makefile
