@@ -1,7 +1,11 @@
 let WASM;
 
 async function init() {
-	const mod = await WebAssembly.instantiateStreaming(await fetch("lib.wasm"), {})
+	const mod = await WebAssembly.instantiateStreaming(await fetch("lib.wasm"), {
+		env: {
+			wasmLogInt: console.log,
+		}
+	})
 	WASM = mod.instance.exports;
 	console.log(WASM)
 
