@@ -28,9 +28,9 @@ pub unsafe extern "C" fn get_height() -> usize {
 #[no_mangle]
 pub unsafe extern "C" fn init() {
     let bg = Color {
-        r: 0xFF,
-        g: 0xFF,
-        b: 0,
+        r: 0x33,
+        g: 0x33,
+        b: 0x33,
         a: 0xFF,
     };
     let fg = Color {
