@@ -1,5 +1,5 @@
 mod canvas;
 
-mod client;
-pub mod interface;
+pub mod client;
+mod interface;
 pub use interface::*;

@@ -1,5 +1,5 @@
+use super::client;
 use canvas::{get_default_canvas, Color};
-use client;
 
 #[no_mangle]
 pub extern "C" fn add(a: usize, b: usize) -> usize {
