@@ -1,9 +1,16 @@
 let WASM;
 
 async function init() {
-	const mod = await WebAssembly.instantiateStreaming(await fetch("lib.wasm"), {})
+	const mod = await WebAssembly.instantiateStreaming(await fetch("lib.wasm"), {
+		env: {
+			wasm_log: (ptr, len) => {
+				const data = new Uint8ClampedArray(WASM.memory.buffer, ptr, len);
+				const text = new TextDecoder().decode(data);
+				console.log(`[WASM] ${text}`);
+			},
+		},
+	});
 	WASM = mod.instance.exports;
-	console.log(WASM)
 
 	WASM.init();
 

@@ -1,4 +1,5 @@
 use canvas::{get_default_canvas, Color};
+use client;
 
 #[no_mangle]
 pub extern "C" fn add(a: usize, b: usize) -> usize {
@@ -42,6 +43,7 @@ pub unsafe extern "C" fn init() {
     let mut c = get_default_canvas();
     c.fill(&bg);
     c.rect(10, 10, c.get_width() - 20, c.get_height() - 20, &fg);
+    client::log(&format!("Background: [{:?}], foreground: [{:?}]", bg, fg));
 }
 
 #[cfg(test)]
