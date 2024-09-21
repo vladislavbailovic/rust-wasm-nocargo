@@ -1,4 +1,4 @@
-use super::{Area,client};
+use super::{client, Area};
 use canvas::{get_default_canvas, Color};
 use map_data::MAP_NODES;
 

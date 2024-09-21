@@ -111,6 +111,12 @@ impl Area {
             max.lat = max.lat.max(node.lat);
             max.lon = max.lon.max(node.lon);
         }
+        client::log(&format!(
+            "min: {:?}, max: {:?}, nodes: {}",
+            min,
+            max,
+            nodes.len()
+        ));
         Self { min, max }
     }
 

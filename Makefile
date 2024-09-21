@@ -31,4 +31,7 @@ $(BUILDDIR)/lib.raw.wasm: src/lib.rs Makefile src/map_data.rs
 		$(SOURCE) -o $(BUILDDIR)/lib.raw.wasm
 
 src/map_data.rs: bin/preprocessor.py data/map.osm
-	./bin/preprocessor.py data/map.osm | tee src/map_data.rs
+	./bin/preprocessor.py data/map.osm > src/map_data.rs
+
+data/map.osm:
+	curl 'https://api.openstreetmap.org/api/0.6/map?bbox=19.825164831789305,45.25099740300844,19.83664980744615,45.26115846317492' > data/map.osm
