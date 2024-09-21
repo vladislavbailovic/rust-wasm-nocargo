@@ -1,10 +1,7 @@
 use super::Area;
 use canvas::{get_default_canvas, Color};
-use map_data::*;
-
-extern "C" {
-    fn wasmLogInt(a: usize);
-}
+use client;
+use map_data::MAP_NODES;
 
 #[no_mangle]
 pub extern "C" fn add(a: usize, b: usize) -> usize {
@@ -46,6 +43,7 @@ pub unsafe extern "C" fn init() {
         a: 0xFF,
     };
     let mut c = get_default_canvas();
+    client::log(&format!("Background: [{:?}], foreground: [{:?}]", bg, fg));
     c.fill(&bg);
 
     let area = Area::new(&MAP_NODES);
