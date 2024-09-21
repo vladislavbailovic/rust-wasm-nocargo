@@ -1,6 +1,5 @@
-use super::Area;
+use super::{Area,client};
 use canvas::{get_default_canvas, Color};
-use client;
 use map_data::MAP_NODES;
 
 #[no_mangle]
