@@ -83,6 +83,33 @@ impl<'a> Canvas<'a> {
             }
         }
     }
+
+    // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    pub fn line(&mut self, x0: usize, y0: usize, x1: usize, y1: usize, color: &Color) {
+        let dx = ((x1 - x0) as i32).abs();
+        let sx: i32 = if x0 < x1 { 1 } else { -1 };
+        let dy = ((y1 - y0) as i32).abs() * -1;
+        let sy: i32 = if y0 < y1 { 1 } else { -1 };
+        let mut error = dx + dy;
+
+        let mut x = x0 as i32;
+        let mut y = y0 as i32;
+        loop {
+            self.set(x as usize, y as usize, color);
+            if x == x1 as i32 && y == y1 as i32 {
+                break;
+            }
+            let e2 = 2 * error;
+            if e2 > dy {
+                error += dy;
+                x += sx;
+            }
+            if e2 <= dx {
+                error += dx;
+                y += sy;
+            }
+        }
+    }
 }
 
 #[cfg(test)]
