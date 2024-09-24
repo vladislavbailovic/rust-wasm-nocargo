@@ -1,4 +1,4 @@
-const FACTOR: usize = 50;
+const FACTOR: usize = 75;
 const WIDTH: usize = 16 * FACTOR;
 const HEIGHT: usize = 9 * FACTOR;
 

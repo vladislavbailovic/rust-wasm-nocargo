@@ -24,6 +24,8 @@ async function init() {
 
 	const canvas = document.getElementById("out");
 	const ctx = canvas.getContext("2d");
+	canvas.width = WIDTH;
+	canvas.height = HEIGHT;
 	ctx.putImageData(image, 0, 0, 0, 0, WIDTH, HEIGHT)
 
 }
