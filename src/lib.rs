@@ -57,6 +57,7 @@ impl RelativePoint {
     }
 }
 
+#[derive(Debug)]
 pub struct AbsolutePoint {
     x: usize,
     y: usize,

@@ -1,6 +1,6 @@
-use super::{client, Area};
+use super::{client, Area, Node};
 use canvas::{get_default_canvas, Color};
-use map_data::MAP_NODES;
+use map_data::{get_map_ways, MAP_NODES};
 
 #[no_mangle]
 pub extern "C" fn add(a: usize, b: usize) -> usize {
@@ -35,22 +35,50 @@ pub unsafe extern "C" fn init() {
         b: 161,
         a: 0xFF,
     };
-    let fg = Color {
+    let fg1 = Color {
         r: 13,
         g: 0xFF,
-        b: 13,
+        b: 12,
+        a: 0xFF,
+    };
+    let fg2 = Color {
+        r: 0xFF,
+        g: 13,
+        b: 12,
         a: 0xFF,
     };
     let mut c = get_default_canvas();
-    client::log(&format!("Background: [{:?}], foreground: [{:?}]", bg, fg));
+    client::log(&format!("Background: [{:?}], foreground: [{:?}]", bg, fg1));
     c.fill(&bg);
 
     let area = Area::new(&MAP_NODES);
     let node_size = 5;
-    for node in &MAP_NODES {
-        let rel = node.relative_to(&area);
-        if let Some(point) = rel.project_onto(c.get_width(), c.get_height(), node_size) {
-            c.rect(point.x, point.y, node_size, node_size, &fg);
+
+    for way in get_map_ways() {
+        let nodes: Vec<&Node> = way.iter().map(|&nid| &MAP_NODES[nid]).collect();
+        for i in 0..nodes.len() - 1 {
+            let p1 = if let Some(point) =
+                nodes[i]
+                    .relative_to(&area)
+                    .project_onto(c.get_width(), c.get_height(), node_size)
+            {
+                point
+            } else {
+                continue;
+            };
+            // c.rect(p1.x, p1.y, node_size, node_size, &fg1);
+            let p2 = if let Some(point) = nodes[i + 1].relative_to(&area).project_onto(
+                c.get_width(),
+                c.get_height(),
+                node_size,
+            ) {
+                point
+            } else {
+                continue;
+            };
+            // c.rect(p2.x, p2.y, node_size, node_size, &fg2);
+
+            c.line(p1.x, p1.y, p2.x, p2.y, &fg1);
         }
     }
 }
